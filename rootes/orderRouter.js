@@ -1,5 +1,5 @@
 const express = require("express");
-const { readOrders, placeOrder, updateOrderFromClient, removeOrder, statusApproval, active, readOrderData, readSinglePrintableData, printAllData, readOrdersForSpecificCustomer, readPendingOrders, activateAll, deactivateAll, readTotalAmountOfCustomer, updatePaymentAmountOfCustomer } = require("../controllers/orders");
+const { readOrders, placeOrder, updateOrderFromClient, removeOrder, statusApproval, active, readOrderData, readSinglePrintableData, printAllData, readOrdersForSpecificCustomer, readPendingOrders, activateAll, deactivateAll, readTotalAmountOfCustomer, updatePaymentAmountOfCustomer, readSpecific } = require("../controllers/orders");
 
 const orderRouter = express.Router();
 orderRouter.get("/printAllData", printAllData);
@@ -14,6 +14,7 @@ orderRouter.post("/getTotalAmount", readTotalAmountOfCustomer);
 orderRouter.post("/updatePayment", updatePaymentAmountOfCustomer);
 orderRouter.post("/deactivateAll", deactivateAll);
 orderRouter.post("/placeOrder", placeOrder);
+orderRouter.post("/specific", readSpecific);
 orderRouter.put("/updateOrder/:id", updateOrderFromClient);
 orderRouter.delete("/deleteOrder/:id", removeOrder);
 orderRouter.put("/approve/:id", statusApproval);

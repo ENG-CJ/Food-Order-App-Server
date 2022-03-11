@@ -19,6 +19,24 @@ module.exports = {
       });
     });
   },
+  readSpecific: (req, res) => {
+    var sql =
+      "SELECT * FROM `orders` JOIN customers ON orders.cust_id=customers.cust_id JOIN foods ON orders.food_id=foods.id where orders.order_date=?";
+    conn.getConnection.query(sql,[req.body.date],(error, data) => {
+      if (error)
+        return res.send({
+          status: false,
+          message: "Error Occurred while reading",
+          description: error.message,
+          error_code: error.code,
+        });
+      console.log();
+      return res.send({
+        status: true,
+        data: data,
+      });
+    });
+  },
   readTotalAmountOfCustomer: (req, res) => {
     var sql =
       "SELECT ifnull(SUM(total_amount),0) as total FROM `orders` WHERE orders.order_date=? ANd orders.cust_id=?";

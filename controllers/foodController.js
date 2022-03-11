@@ -23,10 +23,27 @@ module.exports = {
       });
     });
   },
-  checkFoodName: function (req, res) {
+  readFoodsForAdmins: function (req, res) {
     var sql =
-      "Select *from foods where food_name=?";
-    db.getConnection.query(sql, [req.body.name],(err, result) => {
+      "Select *from foods inner join categories on  foods.category_id = categories.cat_id";
+    db.getConnection.query(sql, (err, result) => {
+      if (err) {
+        return res.send({
+          status: false,
+          message: "There is an error occurred",
+          description: err.message,
+          errorCode: err.code,
+        });
+      }
+      return res.send({
+        status: true,
+        data: result,
+      });
+    });
+  },
+  checkFoodName: function (req, res) {
+    var sql = "Select *from foods where food_name=?";
+    db.getConnection.query(sql, [req.body.name], (err, result) => {
       if (err) {
         return res.send({
           status: false,
@@ -44,6 +61,7 @@ module.exports = {
   readFoodBasedCategories: function (req, res) {
     var sql =
       "Select *from foods inner join categories on  foods.category_id = categories.cat_id where categories.name=? AND foods.status='yes'";
+
     db.getConnection.query(sql, [req.body.category], (err, result) => {
       if (err) {
         return res.send({

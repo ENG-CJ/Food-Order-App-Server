@@ -39,19 +39,20 @@ module.exports = {
   },
   fetchSingle: function (req, res) {
     sql = "Select *from categories where cat_id=?";
-    db.getConnection.query(sql, [req.params.id], (err, result) => {
-      if (err) {
-        res.send({
-          message: "Error occured on reading categories",
-          description: err.message,
-          errorCode: err.code,
-        });
-      }
 
-      return res.send({
-        data: result,
-      });
-    });
+       db.getConnection.query(sql, [req.params.id], (err, result) => {
+         if (err) {
+           res.send({
+             message: "Error occured on reading categories",
+             description: err.message,
+             errorCode: err.code,
+           });
+         }
+
+         return res.send({
+           data: result,
+         });
+       });
   },
   deleteCategory: function (req, res) {
     sql = "DELETE FROM categories where cat_id=?";

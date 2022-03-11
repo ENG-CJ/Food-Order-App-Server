@@ -1,8 +1,10 @@
 const express = require('express')
-const  { readFoodMenu, insertIntoFoodMenu,updateFoodMenu ,deleteMenu, uploadFoodImage, active, fetchSingle, readFoodBasedCategories, checkFoodName}  = require('../controllers/foodController')
+const  { readFoodMenu, insertIntoFoodMenu,updateFoodMenu ,deleteMenu, uploadFoodImage, active, fetchSingle, readFoodBasedCategories, checkFoodName, readFoodsForAdmins}  = require('../controllers/foodController')
 const router = express.Router();
 
+
 router.get('/',readFoodMenu)
+router.get('/adminFoods',readFoodsForAdmins)
 router.get('/:id',fetchSingle)
 router.post('/specificCategories',readFoodBasedCategories)
 router.post("/checkFoodName", checkFoodName);

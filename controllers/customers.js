@@ -39,10 +39,8 @@ module.exports = {
   createCustomer: (req, res) => {
     const { name, mobile, email, password, address, status } = req.body;
     console.log(req.body);
-    var sql =
-      "INSERT INTO customers (fullName,mobile,email,password,address,account_status) VALUES (?, ?, ?,?,?,?)";
-    var values = [name, mobile, email, password, address, status];
-    conn.getConnection.query(sql, values, (error, data) => {
+   var sql = "INSERT INTO customers(fullName,mobile,email,password ,address, account_status) VALUES(?,?,?,?,?,?)";
+   conn.getConnection.query(sql,[name,mobile,email,password,address,status],(error)=>{
       if (error)
         return res.send({
           status: false,
@@ -169,7 +167,6 @@ module.exports = {
       });
     });
   },
-
   deleteCustomer: (req, res) => {
     conn.getConnection.query(
       "DELETE FROM customers WHERE cust_id=?",
