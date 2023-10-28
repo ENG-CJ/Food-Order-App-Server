@@ -26,7 +26,7 @@ git checkout <branch_name>
 
 
 # Tech (Server)
-✅ Nodejs<br>
+✅ Nodejs, Express<br>
 ✅ MySQL<br>
 
 # Folder Structure 🔥
