@@ -3,14 +3,11 @@
 const express =require('express'),
 cors = require('cors'); 
 const app = express();
+const foodRouter = require('./rootes/foodRouter')
 
-app.get('/', function(req, res){
-    return res.send({
-        server : "use this endpoint for testing only",
-        isRunning: true
+app.use(express.json())
 
-    })
-})
+app.use('/', foodRouter)
 
 
 

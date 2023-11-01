@@ -1,0 +1,10 @@
+# Food Menu and Categories (TeamOne) 🍉
+
+We have created Food db and added two tables food_menu and categories tables
+
+food_menu
+    - readFoodMenu
+    - insertIntoFoodMenu
+    - updateFoodMenu
+    - deleteMenu
+
