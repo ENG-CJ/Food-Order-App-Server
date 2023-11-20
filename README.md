@@ -26,11 +26,8 @@ git checkout <branch_name>
 
 
 # Primary Tools And Frameworks
-✅ Flutter <br>
 ✅ Nodejs<br>
-✅ Hive (Simple Local DB Management)<br>
 ✅ MySQL<br>
-✅ Other Tools 
 
 # Folder Structure 🔥
 lib:
