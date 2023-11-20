@@ -25,8 +25,9 @@ git checkout <branch_name>
 - Test your changes: Before you submit a pull request, please make sure to test your changes thoroughly. This will help to ensure that your changes do not introduce any new bugs.
 
 
-# Primary Tools And Frameworks
-✅ Nodejs<br>
+
+# Tech (Server)
+✅ Nodejs, Express<br>
 ✅ MySQL<br>
 
 # Folder Structure 🔥
