@@ -2,6 +2,7 @@
 
 const express =require('express'),
 cors = require('cors'); 
+const router = require('./rootes/customerRouter');
 const app = express();
 
 app.get('/', function(req, res){
@@ -12,6 +13,7 @@ app.get('/', function(req, res){
     })
 })
 
+app.use("/customers",router)
 
 
 
