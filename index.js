@@ -5,14 +5,13 @@ cors = require('cors');
 const router = require('./rootes/customerRouter');
 const orderRouter = require('./rootes/orderRouter');
 const app = express();
+const foodRouter = require('./rootes/foodRouter')
+const categoriesRouter = require('./rootes/categoriesRouter')
 
-app.get('/', function(req, res){
-    return res.send({
-        server : "use this endpoint for testing only",
-        isRunning: true
+app.use(express.json())
 
-    })
-})
+app.use('/', foodRouter)
+app.use('/', categoriesRouter)
 
 app.use("/customers",router)
 
