@@ -1,4 +1,5 @@
 const conn = require("../db/db.config");
+
 module.exports = {
   readOrders: (req, res) => {
     conn.getConnection.query("SELECT * FROM orders", (error, data) => {

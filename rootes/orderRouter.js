@@ -3,6 +3,7 @@ const { readOrders, placeOrder, updateOrderFromClient, removeOrder } = require("
 const orderRouter = express.Router();
 
 orderRouter.get("/", readOrders);
+
 orderRouter.get("/placeOrder", placeOrder);
 orderRouter.get("/updateOrder", updateOrderFromClient);
 orderRouter.get("/deleteOrder", removeOrder);
