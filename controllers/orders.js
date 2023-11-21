@@ -58,12 +58,11 @@ module.exports = {
       quantity,
       delivery_amount,
       total_amount,
-      status,
-      id
+      status
     } = req.body;
     var sql =
       "UPDATE orders SET quantity=?,delivery_amount=?,total_amount=?,status=? WHERE order_id=?";
-    var values = [quantity, delivery_amount, total_amount, status,id];
+    var values = [quantity, delivery_amount, total_amount, status,req.params.id];
     conn.getConnection.query(sql, values, (error, data) => {
       if (error)
         return res.send({
@@ -83,7 +82,7 @@ module.exports = {
   removeOrder: (req, res) => {
     conn.getConnection.query(
       "DELETE orders WHERE order_id=?",
-      [req.body.id],
+      [req.params.id],
       (error, data) => {
         if (error)
           return res.send({
@@ -102,7 +101,7 @@ module.exports = {
   },
   statusApproval : (req,res)=>{
     conn.getConnection.query("UPDATE orders set status=? WHERE order_id=?",
-    [req.body.status,req.body.id],(err,data)=>{
+    [req.body.status,req.params.id],(err,data)=>{
       if (err)
         return res.send({
           status: false,

@@ -3,8 +3,8 @@ const { readCustomers, createCustomer, updateCustomer, deleteCustomer } = requir
 const router = express.Router();
 
 router.get('/',readCustomers);
-router.get('/createCustomer',createCustomer);
-router.get('/updateCustomer',updateCustomer);
-router.get('/deleteCustomer',deleteCustomer);
+router.post('/createCustomer',createCustomer);
+router.put('/updateCustomer/:id',updateCustomer);
+router.delete('/deleteCustomer/:id',deleteCustomer);
 
 module.exports = router;

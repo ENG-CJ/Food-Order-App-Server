@@ -54,7 +54,7 @@ module.exports = {
   },
   updateCustomer: (req, res) => {
     const {
-      id,
+      
       fullName,
       mobile,
       email,
@@ -73,7 +73,7 @@ module.exports = {
       address,
       account_state,
       profile_image,
-      id,
+      req.params.id,
     ];
     conn.getConnection.query(sql, values, (error, data) => {
       if (error)
@@ -94,7 +94,7 @@ module.exports = {
   deleteCustomer: (req, res) => {
     conn.getConnection.query(
       "DELETE customers WHERE cust_id=?",
-      [req.body.id],
+      [req.params.id],
       (error, data) => {
         if (error)
           return res.send({
