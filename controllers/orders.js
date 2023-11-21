@@ -100,4 +100,21 @@ module.exports = {
       }
     );
   },
+  statusApproval : (req,res)=>{
+    conn.getConnection.query("UPDATE orders set status=? WHERE order_id=?",
+    [req.body.status,req.body.id],(err,data)=>{
+      if (err)
+        return res.send({
+          status: false,
+          message: "Error Occurred while updating",
+          description: err.message,
+          error_code: err.code,
+        });
+
+      return res.send({
+        status: true,
+        message: `Order Has been Changed to ${req.body.status} successfully ✔`,
+      });
+    })
+  }
 };
