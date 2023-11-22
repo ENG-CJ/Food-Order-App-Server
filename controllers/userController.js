@@ -1,20 +1,20 @@
 const multer = require('multer');
 const path = require('path');
+const cr= require('crypto')
+
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Set your upload directory
-  },
+  destination:  './public/uploads/'
+  ,
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname);
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + ext);
+    cb(null, `${cr.randomUUID()}${ext}`);
   }
 });
 
 const upload = multer({ storage: storage }).single('profile_image');
 
-const db = require('./database'); // Import the MySQL connection
+const db = require('../db/db.config'); // Import the MySQL connection
 
 const UserController = {
   registerUser: (req, res) => {
@@ -33,31 +33,46 @@ const UserController = {
 
       // Multer successfully uploaded the image
       const { username, email, password } = req.body;
-      const profile_image = req.file ? req.file.filename : null; // Get uploaded file name
+      const profile_image = req.file ? req.file.filename : "no_profile"; // Get uploaded file name
 
-      const sql = 'INSERT INTO Users (username, email, password, profile_image) VALUES (?, ?, ?, ?)';
-      db.query(sql, [username, email, password, profile_image], (err, result) => {
+      const sql = 'INSERT INTO users (username, email, password, profile_image) VALUES (?, ?, ?, ?)';
+    console.log(req.body)
+    
+      db.getConnection.query(sql, [username, email, password, profile_image], (err, result) => {
         if (err) {
           console.error('Error registering user: ', err);
           res.status(500).send('Error registering user');
           return;
         }
-        res.status(201).send('User registered successfully');
+        res.send({status: true, message : 'User registered successfully'});
       });
     });
   },
 
-  getUserById: (req, res) => {
-    const userId = req.params.id;
+  fetchUser: (req, res) => {
+    const {email,pass} = req.params;
 
-    const sql = 'SELECT * FROM Users WHERE id = ?';
-    db.query(sql, userId, (err, result) => {
+    const sql = 'SELECT * FROM users WHERE email = ? and password=?';
+    db.getConnection.query(sql, [email,pass], (err, result) => {
       if (err) {
         console.error('Error fetching user: ', err);
         res.status(500).send('Error fetching user');
         return;
       }
-      res.status(200).json(result);
+      res.send({data: result});
+    });
+  },
+  readUsers: (req, res) => {
+    const userId = req.params.id;
+
+    const sql = 'SELECT * FROM users';
+    db.getConnection.query(sql, (err, result) => {
+      if (err) {
+        console.error('Error fetching user: ', err);
+        res.status(500).send('Error fetching user');
+        return;
+      }
+      res.send({data: result});
     });
   },
 
@@ -66,7 +81,7 @@ const UserController = {
     const { username, email, password, profile_image } = req.body;
 
     const sql = 'UPDATE Users SET username=?, email=?, password=?, profile_image=? WHERE id=?';
-    db.query(sql, [username, email, password, profile_image, userId], (err, result) => {
+    db.getConnection.query(sql, [username, email, password, profile_image, userId], (err, result) => {
       if (err) {
         console.error('Error updating user: ', err);
         res.status(500).send('Error updating user');
@@ -80,13 +95,13 @@ const UserController = {
     const userId = req.params.id;
 
     const sql = 'DELETE FROM Users WHERE id = ?';
-    db.query(sql, userId, (err, result) => {
+    db.getConnection.query(sql, [userId], (err, result) => {
       if (err) {
         console.error('Error deleting user: ', err);
         res.status(500).send('Error deleting user');
         return;
       }
-      res.status(200).send('User deleted successfully');
+      res.send({message: 'User deleted successfully',status: true});
     });
   }
 };

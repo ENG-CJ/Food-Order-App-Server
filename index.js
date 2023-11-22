@@ -6,16 +6,20 @@ const router = require('./rootes/customerRouter');
 const orderRouter = require('./rootes/orderRouter');
 const app = express();
 const foodRouter = require('./rootes/foodRouter')
-const categoriesRouter = require('./rootes/categoriesRouter')
-
+const categoriesRouter = require('./rootes/categoriesRouter');
+const userRouter = require('./rootes/userRoutes');
+const parser = require('body-parser')
+app.use(cors())
 app.use(express.json())
+app.use(parser.json())
 
-app.use('/', foodRouter)
-app.use('/', categoriesRouter)
+app.use('/foods', foodRouter)
+app.use('/categories', categoriesRouter)
 
 app.use("/customers",router)
 
 app.use("/orders",orderRouter)
+app.use("/users",userRouter)
 
 
 

@@ -9,7 +9,7 @@ const mysql= require('mysql2');
 const connection= mysql.createConnection({
     host: "localhost",
     user: "root",  // if you are using custom username use your own custom username here
-    password: "2234@@KvSql", // if your are using custom password use your own custom password here
+    password: "", // if your are using custom password use your own custom password here
     database: "fast_food_db"   // make sure to create this database
 })
 
