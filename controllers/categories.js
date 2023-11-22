@@ -38,5 +38,27 @@ module.exports = {
     });
   },
 
+  //Todo: => Updates category Only if the category is not in use !
+
+  updateCategories: function (req, res) {
+    const{cat_id} =req.params;
+    const {category, description} = req.body;
+    var sql = "Update categories set category = ?, description= ? WHERE cat_id = ?";
+    
+    db.getConnection.query(sql, [category, description,cat_id], (err, result)  =>{
+      if (err) {
+        return res.send({
+          message: "There is an error occured!!",
+          description: err.message,
+          errorCode: err.code,
+        });
+      }
+      return res.send({
+        message: "Category  Has been updated successfully ✔",
+        data: result,
+      });
+    });
+
+    },
   
 };
