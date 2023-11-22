@@ -4,14 +4,15 @@ const express =require('express'),
 cors = require('cors'); 
 const router = require('./rootes/customerRouter');
 const orderRouter = require('./rootes/orderRouter');
+const deliveryRouter = require('./rootes/deliveryRouter');
 const app = express();
 const foodRouter = require('./rootes/foodRouter')
 const categoriesRouter = require('./rootes/categoriesRouter')
 
 app.use(express.json())
-
-app.use('/', foodRouter)
-app.use('/', categoriesRouter)
+app.use("/",deliveryRouter)
+// app.use('/', foodRouter)
+// app.use('/', categoriesRouter)
 
 app.use("/customers",router)
 
