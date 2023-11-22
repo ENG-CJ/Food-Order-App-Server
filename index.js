@@ -11,8 +11,8 @@ const categoriesRouter = require('./rootes/categoriesRouter')
 
 app.use(express.json())
 app.use("/",deliveryRouter)
-// app.use('/', foodRouter)
-// app.use('/', categoriesRouter)
+app.use('/', foodRouter)
+app.use('/', categoriesRouter)
 
 app.use("/customers",router)
 
