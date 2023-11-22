@@ -1,9 +1,6 @@
 
 // NOTE halkaan waxaa ku qeexan (database config) isticmaal database si aad 
 // u isticmashid mysql, sameey database _name oo u bixi (fast_food_db)
-
-
-
 const mysql= require('mysql2');
 
 const connection= mysql.createConnection({
