@@ -14,6 +14,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use(parser.json())
+app.use(express.static("public"))
 
 app.use('/foods', foodRouter)
 app.use('/categories', categoriesRouter)
