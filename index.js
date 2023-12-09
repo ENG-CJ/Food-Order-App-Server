@@ -19,8 +19,6 @@ app.use(express.static("public"))
 app.use('/foods', foodRouter)
 app.use('/categories', categoriesRouter)
 app.use("/",deliveryRouter)
-
-
 app.use("/customers",router)
 
 app.use("/orders",orderRouter)

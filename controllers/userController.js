@@ -64,7 +64,7 @@ const UserController = {
         res.status(500).send("Error fetching user");
         return;
       }
-      res.send({ data: result,});
+      res.send({ data: result });
     });
   },
   getProfile: (req, res) => {
@@ -77,8 +77,8 @@ const UserController = {
         res.status(500).send("Error fetching user");
         return;
       }
-      console.log("id is ",id)
-      return res.send({ data: result, });
+     
+      return res.send({ data: result });
     });
   },
   readUsers: (req, res) => {
@@ -111,6 +111,26 @@ const UserController = {
           return;
         }
         res.status(200).send("User updated successfully");
+      }
+    );
+  },
+  updateProfile: (req, res) => {
+   
+    const { username, email, user_id, old_profile } = req.body;
+
+    const sql =
+      "UPDATE users SET username=?, email=?, profile_image=? WHERE id=?";
+    db.getConnection.query(
+      sql,
+      [username, email, req.file ? req.file.filename : old_profile, user_id],
+      (err, result) => {
+        if (err) {
+          console.error("Error updating user: ", err);
+          res.status(500).send("Error updating user");
+          return;
+        }
+        
+       return  res.send({ message: "profile updated successfully" });
       }
     );
   },
