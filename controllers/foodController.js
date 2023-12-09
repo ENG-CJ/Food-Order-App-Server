@@ -19,8 +19,7 @@ module.exports = {
   },
   insertIntoFoodMenu: function (req, res) {
     const { name, price, category, image, isAvailable } = req.body;
-    var sql =
-      "Insert into food_menu (name, price, category, image, isAvailable) VALUE (?,?,?,?,?)";
+    var sql ="Insert into food_menu (name, price, category, image, isAvailable) VALUE (?,?,?,?,?)";
     db.getConnection.query(
       sql,
       [name, price, category, image, isAvailable],
@@ -39,7 +38,6 @@ module.exports = {
       }
     );
   },
-
   updateFoodMenu: function(req,res) {
     const { food_id } = req.params;
     const { name, price, category, image, isAvailable } = req.body;
