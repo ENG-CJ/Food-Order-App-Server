@@ -19,9 +19,27 @@ module.exports = {
       });
     });
   },
+  checkCategory: function (req, res) {
+    sql = "Select *from categories where name=?";
+    db.getConnection.query(sql, [req.body.name], (err, result) => {
+      if (err) {
+        res.send({
+          status: false,
+          message: "Error occured on reading categories",
+          description: err.message,
+          errorCode: err.code,
+        });
+      }
+
+      return res.send({
+        status: true,
+        data: result,
+      });
+    });
+  },
   fetchSingle: function (req, res) {
     sql = "Select *from categories where cat_id=?";
-    db.getConnection.query(sql,[req.params.id] ,(err, result) => {
+    db.getConnection.query(sql, [req.params.id], (err, result) => {
       if (err) {
         res.send({
           message: "Error occured on reading categories",
@@ -78,26 +96,21 @@ module.exports = {
   //Todo: => Updates category Only if the category is not in use !
 
   updateCategories: function (req, res) {
-    const { name, description,id } = req.body;
-    var sql =
-      "Update categories set name = ?, description= ? WHERE cat_id = ?";
+    const { name, description, id } = req.body;
+    var sql = "Update categories set name = ?, description= ? WHERE cat_id = ?";
 
-    db.getConnection.query(
-      sql,
-      [name, description, id],
-      (err, result) => {
-        if (err) {
-          return res.send({
-            message: "There is an error occured!!",
-            description: err.message,
-            errorCode: err.code,
-          });
-        }
+    db.getConnection.query(sql, [name, description, id], (err, result) => {
+      if (err) {
         return res.send({
-          message: "Category  Has been updated successfully ✔",
-          data: result,
+          message: "There is an error occured!!",
+          description: err.message,
+          errorCode: err.code,
         });
       }
-    );
+      return res.send({
+        message: "Category  Has been updated successfully ✔",
+        data: result,
+      });
+    });
   },
 };

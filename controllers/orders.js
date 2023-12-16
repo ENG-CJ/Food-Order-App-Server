@@ -19,10 +19,10 @@ module.exports = {
       });
     });
   },
-  readOrdersForSpecificCustomer: (req, res) => {
+  readTotalAmountOfCustomer: (req, res) => {
     var sql =
-      "SELECT foods.food_name, categories.name as category, orders.order_status FROM `orders` JOIN foods ON orders.food_id=foods.id JOIN categories ON foods.category_id=categories.cat_id WHERE orders.cust_id=? ORDER BY orders.order_date DESC LIMIT 100";
-    conn.getConnection.query(sql, [req.params.id],(error, data) => {
+      "SELECT ifnull(SUM(total_amount),0) as total FROM `orders` WHERE orders.order_date=? ANd orders.cust_id=?";
+    conn.getConnection.query(sql, [req.body.date,req.body.cust_id],(error, data) => {
       if (error)
         return res.send({
           status: false,
@@ -32,7 +32,60 @@ module.exports = {
         });
       console.log();
       return res.send({
-        
+        status: true,
+        data: data,
+      });
+    });
+  },
+  updatePaymentAmountOfCustomer: (req, res) => {
+    var sql =
+      "UPDATE `orders` set `Paid`='yes' WHERE orders.order_date=? ANd orders.cust_id=?";
+    conn.getConnection.query(sql,[req.body.date,req.body.cust_id,], (error, data) => {
+      if (error)
+        return res.send({
+          status: false,
+          message: "Error Occurred while reading",
+          description: error.message,
+          error_code: error.code,
+        });
+      console.log();
+      return res.send({
+        status: true,
+        data: data,
+      });
+    });
+  },
+  readPendingOrders: (req, res) => {
+    var sql =
+      "SELECT * FROM `orders` JOIN foods WHERE orders.order_status='pending' OR orders.order_status='Pending' ORDER BY orders.order_date DESC LIMIT 25";
+    conn.getConnection.query(sql, (error, data) => {
+      if (error)
+        return res.send({
+          status: false,
+          message: "Error Occurred while reading",
+          description: error.message,
+          error_code: error.code,
+        });
+      console.log();
+      return res.send({
+        status: true,
+        data: data,
+      });
+    });
+  },
+  readOrdersForSpecificCustomer: (req, res) => {
+    var sql =
+      "SELECT foods.food_name, categories.name as category, orders.order_status FROM `orders` JOIN foods ON orders.food_id=foods.id JOIN categories ON foods.category_id=categories.cat_id WHERE orders.cust_id=? ORDER BY orders.order_date DESC LIMIT 100";
+    conn.getConnection.query(sql, [req.params.id], (error, data) => {
+      if (error)
+        return res.send({
+          status: false,
+          message: "Error Occurred while reading",
+          description: error.message,
+          error_code: error.code,
+        });
+      console.log();
+      return res.send({
         status: true,
         data: data,
       });
@@ -111,6 +164,44 @@ module.exports = {
       });
     });
   },
+  activateAll: (req, res) => {
+    const { status, id } = req.body;
+    var sql = "UPDATE orders SET order_status='accepted'";
+    console.log(req.body);
+    conn.getConnection.query(sql, (error, data) => {
+      if (error)
+        return res.send({
+          status: false,
+          message: "Error Occurred while reading",
+          description: error.message,
+          error_code: error.code,
+        });
+
+      return res.send({
+        status: true,
+        message: "order status Has been updated successfully ✔",
+      });
+    });
+  },
+  deactivateAll: (req, res) => {
+    var sql = "UPDATE orders SET order_status='pending'";
+    console.log(req.body);
+    conn.getConnection.query(sql, (error, data) => {
+      if (error)
+        return res.send({
+          status: false,
+          message: "Error Occurred while reading",
+          description: error.message,
+          error_code: error.code,
+        });
+
+      return res.send({
+        status: true,
+        message: "order status Has been updated successfully ✔",
+      });
+    });
+  },
+
   placeOrder: async (req, res) => {
     var sql =
       "INSERT INTO orders (cust_id,food_id,quantity,total_amount,order_date, order_status) VALUES (?)";
@@ -148,48 +239,6 @@ module.exports = {
         status: false,
       });
     }
-
-    // req.body.forEach((value) => {
-    //  try {
-    //    conn.getConnection.query(
-    //      sql,
-    //      [
-    //        [
-    //          value.custID,
-    //          value.food_id,
-    //          value.quantity,
-    //          value.total_amount,
-    //          value.order_date,
-    //          "pending",
-    //        ],
-    //      ],
-    //      (error, data) => {
-    //       if(error)
-    //        console.log("err")
-    //      }
-    //    );
-    //  } catch (error) {
-    //   console.log("error ", error)
-    //  }
-    // });
-
-    // console.log("before ")
-    // if(!hasError)
-    //     {
-    //       console.log("Sent")
-    //       return res.send({
-    //        status: true,
-    //        message: "order Has been placed ✔",
-    //      });}
-    //  if (error) {
-    //    hasError = true;
-    //    return res.send({
-    //      status: false,
-    //      message: "Error Occurred while reading",
-    //      description: error.message,
-    //      error_code: error.code,
-    //    });
-    //  }
   },
 
   updateOrderFromClient: (req, res) => {

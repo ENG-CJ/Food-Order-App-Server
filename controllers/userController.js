@@ -3,15 +3,14 @@ const db = require("../db/db.config"); // Import the MySQL connection
 const UserController = {
   registerUser: (req, res) => {
     const { username, email, password } = req.body;
-
+console.log(username);
     const sql =
       "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
     console.log(req.body);
 
     db.getConnection.query(sql, [username, email, password], (err, result) => {
       if (err) {
-        console.error("Error registering user: ", err);
-        res.status(500).send("Error registering user");
+        res.send({message: "Error registering user",status: false, description: err.message});
         return;
       }
       res.send({ status: true, message: "User registered successfully" });
@@ -34,9 +33,25 @@ const UserController = {
       res.send({ data: result, status: true });
     });
   },
+  validateUser: (req, res) => {
+    const { email, username } = req.body;
+
+    const sql = "SELECT * FROM users WHERE email = ? OR username=?";
+    db.getConnection.query(sql, [email, username], (err, result) => {
+      if (err) {
+        res.send({
+          status: false,
+          message: "Error fetching user",
+          description: err.message,
+        });
+        return;
+      }
+      res.send({ data: result, status: true });
+    });
+  },
+
   exists: (req, res) => {
     const { email, mobile } = req.body;
-   
 
     const sql = "SELECT * FROM customers WHERE email = ? OR mobile= ?";
     db.getConnection.query(sql, [email, mobile], (err, result) => {
@@ -98,18 +113,22 @@ const UserController = {
     );
   },
   updateProfile: (req, res) => {
-    const { username, email, user_id } = req.body;
+    const { username, email,password, user_id } = req.body;
+console.log(req.body);
+    const sql = "UPDATE users SET username=?, email=?, password=? WHERE id=?";
+    db.getConnection.query(
+      sql,
+      [username, email, password, user_id],
+      (err, result) => {
+        if (err) {
+          console.error("Error updating user: ", err);
+          res.status(500).send("Error updating user");
+          return;
+        }
 
-    const sql = "UPDATE users SET username=?, email=? WHERE id=?";
-    db.getConnection.query(sql, [username, email, user_id], (err, result) => {
-      if (err) {
-        console.error("Error updating user: ", err);
-        res.status(500).send("Error updating user");
-        return;
+        return res.send({ message: "profile updated successfully" });
       }
-
-      return res.send({ message: "profile updated successfully" });
-    });
+    );
   },
 
   deleteUser: (req, res) => {

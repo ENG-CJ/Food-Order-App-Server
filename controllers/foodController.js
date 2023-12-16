@@ -18,23 +18,43 @@ module.exports = {
         });
       }
       return res.send({
-         status: true,
+        status: true,
         data: result,
       });
     });
   },
-  readFoodBasedCategories: function (req, res) {
+  checkFoodName: function (req, res) {
     var sql =
-      "Select *from foods inner join categories on  foods.category_id = categories.cat_id where categories.name=?";
-    db.getConnection.query(sql,[req.body.category], (err, result) => {
+      "Select *from foods where food_name=?";
+    db.getConnection.query(sql, [req.body.name],(err, result) => {
       if (err) {
         return res.send({
+          status: false,
           message: "There is an error occurred",
           description: err.message,
           errorCode: err.code,
         });
       }
       return res.send({
+        status: true,
+        data: result,
+      });
+    });
+  },
+  readFoodBasedCategories: function (req, res) {
+    var sql =
+      "Select *from foods inner join categories on  foods.category_id = categories.cat_id where categories.name=? AND foods.status='yes'";
+    db.getConnection.query(sql, [req.body.category], (err, result) => {
+      if (err) {
+        return res.send({
+          status: false,
+          message: "There is an error occurred",
+          description: err.message,
+          errorCode: err.code,
+        });
+      }
+      return res.send({
+        status: true,
         data: result,
       });
     });
@@ -97,6 +117,7 @@ module.exports = {
       (err, result) => {
         if (err) {
           return res.send({
+            status: false,
             message: "There is an error occured!",
             description: err.message,
             errorCode: err.code,
@@ -104,6 +125,7 @@ module.exports = {
         }
 
         return res.send({
+          status: true,
           data: result,
           message: "Food " + name + " Successfully Created",
         });
