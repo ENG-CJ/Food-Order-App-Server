@@ -1,56 +1,20 @@
-const multer = require('multer');
-const path = require('path');
-const cr= require('crypto')
-
-
-const storage = multer.diskStorage({
-  destination:  './public/uploads/'
-  ,
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, `${cr.randomUUID()}${ext}`);
-  }
-});
-
-const upload = multer({ storage: storage }).single('profile_image');
-
-const db = require('../db/db.config'); // Import the MySQL connection
+const db = require("../db/db.config"); // Import the MySQL connection
 
 const UserController = {
   registerUser: (req, res) => {
-    upload(req, res, function (err) {
-      if (err instanceof multer.MulterError) {
-        // A Multer error occurred when uploading
-        console.error("Error uploading image: ", err);
-        res.status(500).send("Error uploading image");
-        return;
-      } else if (err) {
-        // An unknown error occurred when uploading
-        console.error("Unknown error uploading image: ", err);
-        res.status(500).send("Unknown error uploading image");
+    const { username, email, password } = req.body;
+
+    const sql =
+      "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+    console.log(req.body);
+
+    db.getConnection.query(sql, [username, email, password], (err, result) => {
+      if (err) {
+        console.error("Error registering user: ", err);
+        res.status(500).send("Error registering user");
         return;
       }
-
-      // Multer successfully uploaded the image
-      const { username, email, password } = req.body;
-      const profile_image = req.file ? req.file.filename : "no_profile"; // Get uploaded file name
-
-      const sql =
-        "INSERT INTO users (username, email, password, profile_image) VALUES (?, ?, ?, ?)";
-      console.log(req.body);
-
-      db.getConnection.query(
-        sql,
-        [username, email, password, profile_image],
-        (err, result) => {
-          if (err) {
-            console.error("Error registering user: ", err);
-            res.status(500).send("Error registering user");
-            return;
-          }
-          res.send({ status: true, message: "User registered successfully" });
-        }
-      );
+      res.send({ status: true, message: "User registered successfully" });
     });
   },
 
@@ -60,11 +24,31 @@ const UserController = {
     const sql = "SELECT * FROM users WHERE email = ? and password=?";
     db.getConnection.query(sql, [email, pass], (err, result) => {
       if (err) {
-        console.error("Error fetching user: ", err);
-        res.status(500).send("Error fetching user");
+        res.send({
+          status: false,
+          message: "Error fetching user",
+          description: err.message,
+        });
         return;
       }
-      res.send({ data: result });
+      res.send({ data: result, status: true });
+    });
+  },
+  exists: (req, res) => {
+    const { email, mobile } = req.body;
+   
+
+    const sql = "SELECT * FROM customers WHERE email = ? OR mobile= ?";
+    db.getConnection.query(sql, [email, mobile], (err, result) => {
+      if (err) {
+        res.send({
+          status: false,
+          message: "Error fetching user",
+          description: err.message,
+        });
+        return;
+      }
+      res.send({ data: result, status: true });
     });
   },
   getProfile: (req, res) => {
@@ -77,7 +61,7 @@ const UserController = {
         res.status(500).send("Error fetching user");
         return;
       }
-     
+
       return res.send({ data: result });
     });
   },
@@ -97,13 +81,12 @@ const UserController = {
 
   updateUser: (req, res) => {
     const userId = req.params.id;
-    const { username, email, password, profile_image } = req.body;
+    const { username, email, password } = req.body;
 
-    const sql =
-      "UPDATE Users SET username=?, email=?, password=?, profile_image=? WHERE id=?";
+    const sql = "UPDATE Users SET username=?, email=?, password=? WHERE id=?";
     db.getConnection.query(
       sql,
-      [username, email, password, profile_image, userId],
+      [username, email, password, userId],
       (err, result) => {
         if (err) {
           console.error("Error updating user: ", err);
@@ -115,24 +98,18 @@ const UserController = {
     );
   },
   updateProfile: (req, res) => {
-   
-    const { username, email, user_id, old_profile } = req.body;
+    const { username, email, user_id } = req.body;
 
-    const sql =
-      "UPDATE users SET username=?, email=?, profile_image=? WHERE id=?";
-    db.getConnection.query(
-      sql,
-      [username, email, req.file ? req.file.filename : old_profile, user_id],
-      (err, result) => {
-        if (err) {
-          console.error("Error updating user: ", err);
-          res.status(500).send("Error updating user");
-          return;
-        }
-        
-       return  res.send({ message: "profile updated successfully" });
+    const sql = "UPDATE users SET username=?, email=? WHERE id=?";
+    db.getConnection.query(sql, [username, email, user_id], (err, result) => {
+      if (err) {
+        console.error("Error updating user: ", err);
+        res.status(500).send("Error updating user");
+        return;
       }
-    );
+
+      return res.send({ message: "profile updated successfully" });
+    });
   },
 
   deleteUser: (req, res) => {

@@ -1,19 +1,11 @@
-// const express = require('express');
-// const  { readPayments}  = require('../controllers/payments.js');
-// const router = express.Router();
-
-// router.get('/readPayment',readPayments)
-
-
-
 // module.exports = router;
 const express = require('express')
-const {readPayments,insertpayment,updatepayment,deletepayment}=require('../controllers/payments')
+const {readPayments,insertpayment,updatepayment, updateStatus, deletePayment}=require('../controllers/payments')
 const router = express.Router();
 
-router.get('/readpayment',readPayments)
+router.get('/',readPayments)
 router.post('/insertpayment',insertpayment)
-router.put('/updatepayment/:pay_id',updatepayment)
-router.delete('/deletepayment/:pay_id',deletepayment)
+router.post("/updateStatus", updateStatus);
+router.delete("/:pay_id", deletePayment);
 
 module.exports = router;

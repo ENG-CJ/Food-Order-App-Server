@@ -1,11 +1,14 @@
 const express = require('express')
-const  { readFoodMenu, insertIntoFoodMenu,updateFoodMenu ,deleteMenu}  = require('../controllers/foodController')
+const  { readFoodMenu, insertIntoFoodMenu,updateFoodMenu ,deleteMenu, uploadFoodImage, active, fetchSingle, readFoodBasedCategories}  = require('../controllers/foodController')
 const router = express.Router();
 
-router.get('/foodMenu',readFoodMenu)
-router.post('/insertFood',insertIntoFoodMenu)
-router.put('/updateMenu/:food_id',updateFoodMenu)
-router.delete('/deleteMenu/:food_id',deleteMenu)
+router.get('/',readFoodMenu)
+router.get('/:id',fetchSingle)
+router.post('/specificCategories',readFoodBasedCategories)
+router.post('/create',uploadFoodImage().single("image"),insertIntoFoodMenu)
+router.put('/update/:id',uploadFoodImage().single("image"),updateFoodMenu)
+router.post('/updateStatus',active)
+router.delete('/:food_id',deleteMenu)
 
 
 module.exports = router;
