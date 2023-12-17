@@ -57,7 +57,7 @@ module.exports = {
   },
   readPendingOrders: (req, res) => {
     var sql =
-      "SELECT * FROM `orders` JOIN foods WHERE orders.order_status='pending' OR orders.order_status='Pending' ORDER BY orders.order_date DESC LIMIT 25";
+      "SELECT DISTINCT * FROM `orders` JOIN foods ON orders.food_id=foods.id WHERE orders.order_status='pending'  ORDER BY orders.order_date DESC LIMIT 25";
     conn.getConnection.query(sql, (error, data) => {
       if (error)
         return res.send({

@@ -3,14 +3,18 @@ const db = require("../db/db.config"); // Import the MySQL connection
 const UserController = {
   registerUser: (req, res) => {
     const { username, email, password } = req.body;
-console.log(username);
+    console.log(username);
     const sql =
       "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
     console.log(req.body);
 
     db.getConnection.query(sql, [username, email, password], (err, result) => {
       if (err) {
-        res.send({message: "Error registering user",status: false, description: err.message});
+        res.send({
+          message: "Error registering user",
+          status: false,
+          description: err.message,
+        });
         return;
       }
       res.send({ status: true, message: "User registered successfully" });
@@ -22,6 +26,22 @@ console.log(username);
 
     const sql = "SELECT * FROM users WHERE email = ? and password=?";
     db.getConnection.query(sql, [email, pass], (err, result) => {
+      if (err) {
+        res.send({
+          status: false,
+          message: "Error fetching user",
+          description: err.message,
+        });
+        return;
+      }
+      res.send({ data: result, status: true });
+    });
+  },
+  findEmail: (req, res) => {
+    const { email } = req.body;
+
+    const sql = "SELECT * FROM users WHERE email = ?";
+    db.getConnection.query(sql, [email], (err, result) => {
       if (err) {
         res.send({
           status: false,
@@ -112,9 +132,27 @@ console.log(username);
       }
     );
   },
+  updateUserPass: (req, res) => {
+   
+    const { email, password } = req.body;
+
+    const sql = "UPDATE Users SET  password=? WHERE email=?";
+    db.getConnection.query(
+      sql,
+      [password, email],
+      (err, result) => {
+        if (err) {
+          console.error("Error updating user: ", err);
+          res.send({message :"Error updating user", description: err.message, status : false});
+          return;
+        }
+        res.send({status : true, message : "User updated successfully"});
+      }
+    );
+  },
   updateProfile: (req, res) => {
-    const { username, email,password, user_id } = req.body;
-console.log(req.body);
+    const { username, email, password, user_id } = req.body;
+    console.log(req.body);
     const sql = "UPDATE users SET username=?, email=?, password=? WHERE id=?";
     db.getConnection.query(
       sql,

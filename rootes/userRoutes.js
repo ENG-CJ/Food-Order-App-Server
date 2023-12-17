@@ -4,6 +4,8 @@ const UserController = require('../controllers/userController'); // Import the U
 
 // Routes for user operations
 userRouter.post('/register', UserController.registerUser);
+userRouter.post("/findEmail", UserController.findEmail);
+userRouter.post("/updateUserPass", UserController.updateUserPass);
 userRouter.post("/validateUser", UserController.validateUser);
 userRouter.post("/profile_update", UserController.updateProfile);
 userRouter.post("/exists", UserController.exists);
